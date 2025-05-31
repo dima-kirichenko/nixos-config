@@ -140,6 +140,7 @@
     gh
     nil
     nixd
+    nh
   ];
 
   programs.nix-ld.enable = true;
