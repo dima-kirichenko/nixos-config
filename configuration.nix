@@ -119,7 +119,7 @@
       (vscode.override { isInsiders = true; }).overrideAttrs (oldAttrs: rec {
         src = (builtins.fetchTarball {
           url = "https://code.visualstudio.com/sha/download?build=insider&os=linux-x64";
-          sha256 = "1kbidggnrrly2dij4g4ny2pza2pcnv82jy7bzr5398y9xsxcq0nq";
+          sha256 = "1k075mpdgkgr7079jllsb1jiwxvljr61asqw9hzbng0agba82p7h";
         });
         version = "latest";
 
