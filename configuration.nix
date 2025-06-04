@@ -2,13 +2,23 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      inputs.nixvim.nixosModules.nixvim
     ];
+
+  programs.nixvim = {
+    enable = true;
+    defaultEditor = true;
+
+    extraPackages = [
+      pkgs.vimPlugins.gruvbox-nvim
+    ];
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -59,7 +69,16 @@
   console.keyMap = "de";
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing = with pkgs; {
+    enable = true;
+    drivers = [ cnijfilter2 gutenprint ];
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -80,8 +99,18 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  programs.fish= {
+    enable = true;
+
+    shellAliases = {
+      ll = "ls -l";
+      gs = "git status";
+    };
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dima = {
+    shell = pkgs.fish;
     isNormalUser = true;
     description = "Dima";
     extraGroups = [ "networkmanager" "wheel" ];
@@ -119,7 +148,7 @@
       (vscode.override { isInsiders = true; }).overrideAttrs (oldAttrs: rec {
         src = (builtins.fetchTarball {
           url = "https://code.visualstudio.com/sha/download?build=insider&os=linux-x64";
-          sha256 = "1k075mpdgkgr7079jllsb1jiwxvljr61asqw9hzbng0agba82p7h";
+          sha256 = "1idgrpbyr4ai0j9phjr5fzlm2a8dbpa30gbxizwqzrpcsikpwbf3";
         });
         version = "latest";
 
@@ -141,6 +170,26 @@
     nil
     nixd
     nh
+    starship
+  ];
+
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = true;
+      command_timeout = 1300;
+      scan_timeout = 50;
+      format = "$all$nix_shell$nodejs$lua$golang$rust$php$git_branch$git_commit$git_state$git_status\n$username$hostname$directory";
+      character = {
+        success_symbol = "[](bold green) ";
+        error_symbol = "[✗](bold red) ";
+      };
+    };
+  };
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
   ];
 
   programs.nix-ld.enable = true;
