@@ -109,7 +109,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dima = {
-    shell = pkgs.fish;
+    shell = pkgs.nushell; #fish;
     isNormalUser = true;
     description = "Dima";
     extraGroups = [ "networkmanager" "wheel" ];
@@ -170,7 +170,11 @@
     nixd
     nh
     starship
+    vmware-workstation
+    nushell
   ];
+
+  virtualisation.vmware.host.enable = true;
 
   programs.starship = {
     enable = true;
@@ -196,7 +200,6 @@
   boot.kernel.sysctl = {
     # if you use ipv4, this is all you need
     "net.ipv4.conf.all.forwarding" = true;
-
     # If you want to use it for ipv6
     "net.ipv6.conf.all.forwarding" = true;
   };
