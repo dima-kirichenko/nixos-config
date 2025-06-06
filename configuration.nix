@@ -147,7 +147,7 @@
       (vscode.override { isInsiders = true; }).overrideAttrs (oldAttrs: rec {
         src = (builtins.fetchTarball {
           url = "https://code.visualstudio.com/sha/download?build=insider&os=linux-x64";
-          sha256 = "0km6qs3w0fygk5ysb4d7fbf4bzb3n5k4zz0xhjrnw3dyfwlqwl06";
+          sha256 = "12l49a9wj6g8jffy7gp6qmbias0cqfn94jafkjdwg753gd878c0b";
         });
         version = "latest";
 
@@ -170,11 +170,12 @@
     nixd
     nh
     starship
-    vmware-workstation
+    #vmware-workstation
     nushell
   ];
 
-  virtualisation.vmware.host.enable = true;
+  virtualisation.vmware.host.enable = false;
+  boot.kernelPackages = pkgs.linuxPackages_latest; #_6_14;
 
   programs.starship = {
     enable = true;
